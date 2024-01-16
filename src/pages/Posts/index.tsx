@@ -93,7 +93,12 @@ const Posts: React.FC = () => {
                   <Typography>{card.content}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">View</Button>
+                  <Button
+                    size="small"
+                    onClick={() => navigate(`/post/${card._id}`)}
+                  >
+                    View
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>
@@ -110,7 +115,7 @@ const Posts: React.FC = () => {
         onClick={() => navigate("/new-post")}
       >
         <AddIcon sx={{ mr: 1 }} />
-        Add Review
+        Add Comment
       </Fab>
     </>
   );

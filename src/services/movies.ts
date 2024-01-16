@@ -6,9 +6,11 @@ export interface Movie {
   name: string;
 }
 
-const getMovies = async () => {
-  const { data } = await axios.get<Movie[]>("/movies");
-  return data;
+const getMovies = async (search: string) => {
+  const { data } = await axios.get<{ description: Movie[] }>(
+    `/movies?q=${search || "a"}`
+  );
+  return data.description;
 };
 
 export { getMovies };

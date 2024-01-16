@@ -8,6 +8,8 @@ import { Button, Typography, createTheme } from "@mui/material";
 import NewPost from "./pages/NewPost";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Post from "./pages/Post";
+import NewComment from "./pages/NewComment";
 
 const App = () => {
   const defaultTheme = createTheme();
@@ -27,6 +29,8 @@ const App = () => {
 
       <Routes>
         <Route path="/new-post" element={<NewPost />} />
+        <Route path="/post/:postId/add-review" element={<NewComment />} />
+        <Route path="/post/:postId" element={<Post />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
 

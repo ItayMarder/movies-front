@@ -15,6 +15,7 @@ const mockPosts = (mock: MockAdapter) => {
           profilePicturePath: "./",
         },
         title: "title1",
+        movieId: "1",
         content: "text text\n more text\n bla bla bla",
         imagePath: "./",
         comments: [
@@ -49,6 +50,7 @@ const mockPosts = (mock: MockAdapter) => {
           profilePicturePath: "./",
         },
         title: "other movie",
+        movieId: "2",
         content: "text text\n more text\n bla bla bla",
         imagePath: "./",
         comments: [
@@ -65,6 +67,46 @@ const mockPosts = (mock: MockAdapter) => {
         ],
       },
     ],
+  ]);
+
+  mock.onGet(/\/api\/posts\.*/).reply(() => [
+    200,
+
+    {
+      _id: 1,
+      owner: {
+        _id: 1,
+        email: "1@gmail.com",
+        password: "pass",
+        profilePicturePath: "./",
+      },
+      title: "title1",
+      movieId: "1",
+      content: "text text\n more text\n bla bla bla",
+      imagePath: "./",
+      comments: [
+        {
+          _id: 1,
+          owner: {
+            _id: 2,
+            email: "2@gmail.com",
+            password: "pass",
+            profilePicturePath: "./",
+          },
+          content: "comment1",
+        },
+        {
+          _id: 1,
+          owner: {
+            _id: 2,
+            email: "2@gmail.com",
+            password: "pass",
+            profilePicturePath: "./",
+          },
+          content: "comment2",
+        },
+      ],
+    },
   ]);
 };
 

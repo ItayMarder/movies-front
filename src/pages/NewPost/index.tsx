@@ -15,7 +15,13 @@ import { Post, createPost } from "../../services/posts";
 
 const NewPost: React.FC = () => {
   const queryClient = useQueryClient();
-  const { data: movies } = useQuery(["getMovies"], () => getMovies());
+  const [inputValue, setInputValue] = React.useState("");
+
+  const { data: movies } = useQuery(["getMovies", inputValue], () =>
+    getMovies(inputValue)
+  );
+  console.log("movies", movies);
+
   const navigate = useNavigate();
 
   const { mutateAsync } = useMutation((post: any) => createPost(post), {
@@ -53,8 +59,17 @@ const NewPost: React.FC = () => {
           fullWidth
           options={movies || []}
           value={formik.values.movie}
-          onChange={(_, newValue) => formik.setFieldValue("movie", newValue)}
-          getOptionLabel={(o: any) => o.name}
+          isOptionEqualToValue={(option, value) =>
+            option["#TITLE"] === value["#TITLE"]
+          }
+          filterOptions={(x) => x}
+          onChange={(event: any, newValue: any) => {
+            formik.setFieldValue("movie", newValue);
+          }}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          getOptionLabel={(o: any) => o["#TITLE"]}
           renderInput={(params) => (
             <TextField
               {...params}

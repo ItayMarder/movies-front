@@ -21,9 +21,14 @@ const getPosts = async () => {
   return data;
 };
 
+const getPost = async (postId: string) => {
+  const { data } = await axios.get<Post>(`/posts/${postId}`);
+  return data;
+};
+
 const createPost = async (post: Post) => {
   const { data } = await axios.post<Post>("/posts", post);
   return data;
 };
 
-export { getPosts, createPost };
+export { getPosts, createPost, getPost };
