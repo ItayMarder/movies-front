@@ -51,8 +51,7 @@ const logoutUser = async () => {
 };
 
 const editUser = async (userData) => {
-  // const { data } = await axios.patch("/users", userData);
-  // return data;
+
 
   const form = new FormData();
   form.append("email", userData.email);

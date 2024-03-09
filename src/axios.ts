@@ -1,14 +1,12 @@
 import axiosInstance from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { refreshUser } from "./services/users";
-// import { AuthService } from "./services/authService";
 
+export const baseURL = "http://localhost:3000";
 const axios = axiosInstance.create({
   withCredentials: true,
   timeout: 10000,
-  baseURL: import.meta.env.VITE_APP_IS_DOCKER
-    ? "http://localhost:3000/api"
-    : "/api",
+  baseURL: import.meta.env.VITE_APP_IS_DOCKER ? baseURL + "/api" : "/api",
 });
 
 axios.interceptors.request.use((config) => {
@@ -24,7 +22,10 @@ axios.interceptors.request.use((config) => {
 axios.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401) {
+    if (
+      error.response?.status === 401 &&
+      error.config.url !== "/auth/refresh"
+    ) {
       const refreshToken = localStorage.getItem("refreshToken");
 
       if (refreshToken) {

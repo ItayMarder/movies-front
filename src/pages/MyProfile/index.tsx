@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import Button from "@mui/material/Button";
@@ -8,9 +8,7 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
-import { Post, createPost } from "../../services/posts";
 import { editUser, getUserDetails, logoutUser } from "../../services/users";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
@@ -30,15 +28,13 @@ const VisuallyHiddenInput = styled("input")({
 
 const MyProfile: React.FC = () => {
   const queryClient = useQueryClient();
-  // const { data: movies } = useQuery(["getMovies"], () => getMovies());
   const navigate = useNavigate();
   const userData = queryClient.getQueryData("user");
-  console.log(userData);
 
   const { mutateAsync: editMutateAsync } = useMutation(
     (user) => editUser(user),
     {
-      onSuccess: async (data) => {
+      onSuccess: async () => {
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("accessToken");
 
@@ -50,7 +46,6 @@ const MyProfile: React.FC = () => {
           ...userData,
         });
 
-        // navigate("/");
         toast.success("Edited user successfully");
       },
       onError: (error: any) => {
@@ -60,12 +55,11 @@ const MyProfile: React.FC = () => {
   );
 
   const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.setQueryData("user", null);
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
       navigate("/");
-      // console.log(queryClient.setQueryData("user"));
 
       toast.success("logout successfully");
     },
@@ -92,7 +86,6 @@ const MyProfile: React.FC = () => {
     validationSchema: Yup.object().shape({
       email: Yup.string().required("email is required"),
       username: Yup.string().required("username is required"),
-      // password: Yup.string().required("password is required"),
       profileImage: Yup.mixed().required("image is required"),
     }),
     onSubmit: (values) => {
@@ -169,21 +162,16 @@ const MyProfile: React.FC = () => {
                 id="profileImage"
                 name="profileImage"
                 label="profileImage"
-                // onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                // accept="image/png, .svg"
+                accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
-                  // Object is possibly null error w/o check
                   if (e.currentTarget.files) {
-                    console.log(e.currentTarget.files[0]);
-
                     formik.setFieldValue(
                       "profileImage",
                       e.currentTarget.files[0]
                     );
                   }
                 }}
-                // error={formik.touched.image && Boolean(formik.errors.image)}
                 helperText={
                   formik.touched.profileImage && formik.errors.profileImage
                 }

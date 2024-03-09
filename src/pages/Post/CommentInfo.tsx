@@ -1,32 +1,11 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { toast } from "react-toastify";
+import React from "react";
 
-import Button from "@mui/material/Button";
-import * as Yup from "yup";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
-import { getPost } from "../../services/posts";
-import { useNavigate, useParams } from "react-router-dom";
-import { Post, createPost, Comment } from "../../services/posts";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Divider,
-  Skeleton,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
+import { Comment } from "../../services/posts";
+import { Avatar, Box, Card, CardContent } from "@mui/material";
+import { baseURL } from "../../axios";
 
 const CommentInfo: React.FC<Comment> = ({ content, user, date }) => {
-  console.log("user", user);
-
   return (
     <Card
       variant="outlined"
@@ -35,7 +14,7 @@ const CommentInfo: React.FC<Comment> = ({ content, user, date }) => {
       <CardContent>
         <Box display="flex" gap="20px">
           <Avatar
-            src={`http://localhost:3000/images/${user.profileImage}`}
+            src={`${baseURL}/images/${user.profileImage}`}
             animation="wave"
             variant="circular"
             width={40}

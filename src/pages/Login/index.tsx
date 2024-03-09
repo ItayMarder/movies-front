@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import Button from "@mui/material/Button";
@@ -8,10 +8,8 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
-import { Post, createPost } from "../../services/posts";
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { Box } from "@mui/material";
 import {
   loginUser,
@@ -21,7 +19,6 @@ import {
 
 const Login: React.FC = () => {
   const queryClient = useQueryClient();
-  // const { data: movies } = useQuery(["getMovies"], () => getMovies());
   const navigate = useNavigate();
 
   const { mutateAsync } = useMutation(
@@ -36,7 +33,7 @@ const Login: React.FC = () => {
         navigate("/");
         toast.success("login successfully");
       },
-      onError: (error: any) => {
+      onError: () => {
         toast.error("Failed to login");
       },
     }
@@ -46,8 +43,6 @@ const Login: React.FC = () => {
     (user: any) => googleLoginUser(user),
     {
       onSuccess: async (data) => {
-        console.log(data);
-
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         const userData = await getUserDetails();
@@ -56,33 +51,11 @@ const Login: React.FC = () => {
         navigate("/");
         toast.success("login successfully");
       },
-      onError: (error: any) => {
-        console.log(error);
-
+      onError: () => {
         toast.error("Failed to login");
       },
     }
   );
-
-  const onGoogleLoginSuccess = async (
-    credentialResponse: CredentialResponse
-  ) => {
-    console.log(credentialResponse);
-    // try {
-    //   const res = await googleSignin(credentialResponse);
-    //   console.log(res);
-    // } catch (e) {
-    //   toast.error("Failed to login");
-
-    //   console.log(e);
-    // }
-
-    googleLoginMutateAsync(credentialResponse);
-  };
-
-  const onGoogleLoginFailure = () => {
-    console.log("Google login failed");
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -142,8 +115,10 @@ const Login: React.FC = () => {
 
       <Box display="flex" justifyContent="center" marginTop="20px">
         <GoogleLogin
-          onSuccess={onGoogleLoginSuccess}
-          onError={onGoogleLoginFailure}
+          onSuccess={googleLoginMutateAsync}
+          onError={() => {
+            toast.error("Failed to login with google");
+          }}
         />
       </Box>
     </Container>

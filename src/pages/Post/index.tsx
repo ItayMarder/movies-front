@@ -1,28 +1,19 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { toast } from "react-toastify";
+import React from "react";
+import { useQuery } from "react-query";
 
-import Button from "@mui/material/Button";
-import * as Yup from "yup";
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
 import { getPost } from "../../services/posts";
 import { useNavigate, useParams } from "react-router-dom";
-import { Post, createPost } from "../../services/posts";
 import { Box, CircularProgress, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
 import CommentInfo from "./CommentInfo";
 
 const PostPage: React.FC = () => {
-  const queryClient = useQueryClient();
   const { postId } = useParams();
 
   const { data: post } = useQuery(["getPost", postId], () => getPost(postId!));
-  console.log(post);
 
   const navigate = useNavigate();
 

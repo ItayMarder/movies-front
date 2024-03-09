@@ -25,7 +25,6 @@ const getPosts = async (page = 1) => {
 
 const getMyPosts = async () => {
   const { data } = await axios.get<Post[]>("/posts/my");
-  console.log(data);
 
   return data;
 };

@@ -1,34 +1,20 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { toast } from "react-toastify";
+import React from "react";
 
 import Button from "@mui/material/Button";
-import * as Yup from "yup";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
-import { getPost } from "../../services/posts";
-import { useNavigate, useParams } from "react-router-dom";
-import { Post, createPost, Comment } from "../../services/posts";
+import { useNavigate } from "react-router-dom";
+import { Post } from "../../services/posts";
 import {
   Avatar,
-  Badge,
-  Box,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   CardMedia,
   Chip,
-  CircularProgress,
-  Divider,
   Grid,
-  Skeleton,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
+import { baseURL } from "../../axios";
 
 const PostInfo: React.FC<Post> = ({
   movieName,
@@ -46,7 +32,7 @@ const PostInfo: React.FC<Post> = ({
         <CardHeader
           avatar={
             <Avatar
-              src={`http://localhost:3000/images/${user.profileImage}`}
+              src={`${baseURL}/images/${user.profileImage}`}
               animation="wave"
               variant="circular"
               width={40}
@@ -60,8 +46,7 @@ const PostInfo: React.FC<Post> = ({
         <CardMedia
           component="div"
           sx={{ height: "190px" }}
-          // image="https://source.unsplash.com/random?wallpapers"
-          image={`http://localhost:3000/images/${imageName}`}
+          image={`${baseURL}/images/${imageName}`}
         />
         <CardContent>
           <React.Fragment>

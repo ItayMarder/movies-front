@@ -1,15 +1,9 @@
-import {
-  Route,
-  RouterProvider,
-  Routes,
-  createBrowserRouter,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, Button, Grid, Typography, createTheme } from "@mui/material";
+import { createTheme } from "@mui/material";
 import Posts from "./pages/Posts";
 import NewPost from "./pages/NewPost";
 import Login from "./pages/Login";
@@ -18,14 +12,13 @@ import Post from "./pages/Post";
 import NewComment from "./pages/NewComment";
 import MyProfile from "./pages/MyProfile";
 import MyPosts from "./pages/MyPosts";
-import { QueryObserver, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import { useEffect, useState } from "react";
 import TopBar from "./TopBar";
 import { getUserDetails } from "./services/users";
 
 const App = () => {
   const defaultTheme = createTheme();
-  const [user, setUser] = useState<any>(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -41,7 +34,6 @@ const App = () => {
           refreshToken,
           ...userData,
         });
-        console.log(queryClient.getQueryData("user"));
       }
     };
 

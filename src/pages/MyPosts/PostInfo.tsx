@@ -1,32 +1,21 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import Button from "@mui/material/Button";
-import * as Yup from "yup";
-import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import Autocomplete from "@mui/material/Autocomplete";
-import { deletePost, getPost } from "../../services/posts";
-import { useNavigate, useParams } from "react-router-dom";
-import { Post, createPost, Comment } from "../../services/posts";
+import { deletePost } from "../../services/posts";
+import { Post } from "../../services/posts";
 import {
   Avatar,
-  Box,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   CardMedia,
-  CircularProgress,
-  Divider,
   Grid,
-  Skeleton,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import Fab from "@mui/material/Fab";
+import { baseURL } from "../../axios";
 
 const PostInfo: React.FC<Post> = ({
   movieName,
@@ -35,13 +24,12 @@ const PostInfo: React.FC<Post> = ({
   user,
   imageName,
 }) => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const { mutateAsync: deleteMutateAsync } = useMutation(
     () => deletePost(_id),
     {
-      onSuccess: (data) => {
+      onSuccess: () => {
         queryClient.invalidateQueries("getPosts");
         queryClient.invalidateQueries("myPosts");
         toast.success("Deleted post successfully");
@@ -58,7 +46,7 @@ const PostInfo: React.FC<Post> = ({
         <CardHeader
           avatar={
             <Avatar
-              src={`http://localhost:3000/images/${user.profileImage}`}
+              src={`${baseURL}/images/${user.profileImage}`}
               animation="wave"
               variant="circular"
               width={40}
@@ -71,7 +59,7 @@ const PostInfo: React.FC<Post> = ({
         <CardMedia
           component="div"
           sx={{ height: "190px" }}
-          image={`http://localhost:3000/images/${imageName}`}
+          image={`${baseURL}/images/${imageName}`}
         />
         <CardContent>
           <React.Fragment>

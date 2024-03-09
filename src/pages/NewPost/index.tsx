@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
-import { Post, createPost } from "../../services/posts";
+import { createPost } from "../../services/posts";
 import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
@@ -35,7 +35,6 @@ const NewPost: React.FC = () => {
   const { data: movies } = useQuery(["getMovies", inputValue], () =>
     getMovies(inputValue)
   );
-  console.log("movies", movies);
 
   const navigate = useNavigate();
 
@@ -135,16 +134,13 @@ const NewPost: React.FC = () => {
                 id="image"
                 name="image"
                 label="image"
-                // onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                // accept="image/png, .svg"
+                accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
-                  // Object is possibly null error w/o check
                   if (e.currentTarget.files) {
                     formik.setFieldValue("image", e.currentTarget.files[0]);
                   }
                 }}
-                // error={formik.touched.image && Boolean(formik.errors.image)}
                 helperText={formik.touched.image && formik.errors.image}
               />
             </Button>

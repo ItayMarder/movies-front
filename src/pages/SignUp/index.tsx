@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React from "react";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import Button from "@mui/material/Button";
@@ -8,9 +8,7 @@ import Container from "@mui/material/Container";
 import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
-import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
-import { Post, createPost } from "../../services/posts";
 import { createUser } from "../../services/users";
 import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -29,8 +27,6 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 const SignUp: React.FC = () => {
-  const queryClient = useQueryClient();
-  // const { data: movies } = useQuery(["getMovies"], () => getMovies());
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -47,15 +43,12 @@ const SignUp: React.FC = () => {
       image: Yup.mixed().required("image is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-
       mutateAsync(values);
     },
   });
 
   const { mutateAsync } = useMutation((user: any) => createUser(user), {
     onSuccess: (data) => {
-      // queryClient.invalidateQueries("getPosts");
       navigate("/");
       toast.success("Created user successfully");
     },
@@ -129,16 +122,13 @@ const SignUp: React.FC = () => {
                 id="image"
                 name="image"
                 label="image"
-                // onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                // accept="image/png, .svg"
+                accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
-                  // Object is possibly null error w/o check
                   if (e.currentTarget.files) {
                     formik.setFieldValue("image", e.currentTarget.files[0]);
                   }
                 }}
-                // error={formik.touched.image && Boolean(formik.errors.image)}
                 helperText={formik.touched.image && formik.errors.image}
               />
             </Button>
