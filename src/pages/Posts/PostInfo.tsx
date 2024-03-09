@@ -23,6 +23,7 @@ const PostInfo: React.FC<Post> = ({
   user,
   comments,
   imageName,
+  imdbRating,
 }) => {
   const navigate = useNavigate();
 
@@ -41,7 +42,16 @@ const PostInfo: React.FC<Post> = ({
           }
           title={<Typography>{movieName}</Typography>}
           subheader={<Typography>{user.username}</Typography>}
-          action={<Chip color="primary" label={comments.length} />}
+          action={
+            <>
+              <Chip
+                color="primary"
+                label={comments.length}
+                sx={{ marginRight: "5px" }}
+              />
+              <Chip color="success" label={imdbRating || "?"} />
+            </>
+          }
         />
         <CardMedia
           component="div"

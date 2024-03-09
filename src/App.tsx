@@ -16,6 +16,7 @@ import { useQueryClient } from "react-query";
 import { useEffect, useState } from "react";
 import TopBar from "./TopBar";
 import { getUserDetails } from "./services/users";
+import PostEdit from "./pages/Posts/PostEdit";
 
 const App = () => {
   const defaultTheme = createTheme();
@@ -54,6 +55,7 @@ const App = () => {
       <Routes>
         <Route path="/new-post" element={<NewPost />} />
         <Route path="/post/:postId/add-comment" element={<NewComment />} />
+        <Route path="/post/:postId/edit" element={<PostEdit />} />
         <Route path="/post/:postId" element={<Post />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

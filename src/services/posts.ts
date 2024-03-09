@@ -35,6 +35,17 @@ const getPost = async (postId: string) => {
   return data;
 };
 
+const editPost = async (postId, post) => {
+  const form = new FormData();
+  // form.append("movieName", post.movieName);
+  form.append("content", post.content);
+  form.append("imageName", post.imageName);
+  const { data } = await axios.patch<User>("/posts/" + postId, form, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return data;
+};
+
 const createPost = async (post: any) => {
   const form = new FormData();
   form.append("movieName", post.movie["#TITLE"]);
@@ -60,4 +71,12 @@ const createComment = async (postId: string, content: string) => {
 
   return data;
 };
-export { getPosts, createPost, getPost, getMyPosts, deletePost, createComment };
+export {
+  getPosts,
+  createPost,
+  getPost,
+  getMyPosts,
+  deletePost,
+  createComment,
+  editPost,
+};

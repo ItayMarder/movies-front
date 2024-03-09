@@ -16,6 +16,7 @@ import {
   Grid,
 } from "@mui/material";
 import { baseURL } from "../../axios";
+import { useNavigate } from "react-router";
 
 const PostInfo: React.FC<Post> = ({
   movieName,
@@ -25,6 +26,7 @@ const PostInfo: React.FC<Post> = ({
   imageName,
 }) => {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutateAsync: deleteMutateAsync } = useMutation(
     () => deletePost(_id),
@@ -67,7 +69,7 @@ const PostInfo: React.FC<Post> = ({
           </React.Fragment>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => {}}>
+          <Button size="small" onClick={() => navigate(`/post/${_id}/edit`)}>
             Edit
           </Button>
           <Button size="small" onClick={deleteMutateAsync}>

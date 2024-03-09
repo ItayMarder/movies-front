@@ -10,9 +10,9 @@ import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { editUser, getUserDetails, logoutUser } from "../../services/users";
+import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
-import { Box, Grid } from "@mui/material";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
