@@ -8,16 +8,20 @@ const mockUsers = (mock: MockAdapter) => {
         _id: 1,
         email: "1@gmail.com",
         password: "pass",
-        profilePicturePath: "./",
+        username: "user1",
+        profileImage: "./",
       },
       {
         _id: 2,
         email: "2@gmail.com",
         password: "pass",
-        profilePicturePath: "./",
+        username: "user2",
+        profileImage: "./",
       },
     ],
   ]);
+
+  mock.onPatch(/\/api\/users\.*/).reply(() => [200, {}]);
 };
 
 export { mockUsers };

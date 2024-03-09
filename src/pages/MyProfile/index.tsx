@@ -11,10 +11,10 @@ import Typography from "@mui/material/Typography";
 import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
 import { Post, createPost } from "../../services/posts";
-import { createUser } from "../../services/users";
-import { Box, Grid } from "@mui/material";
+import { editUser, getUserDetails, logoutUser } from "../../services/users";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
+import { Box, Grid } from "@mui/material";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -28,46 +28,97 @@ const VisuallyHiddenInput = styled("input")({
   width: 1,
 });
 
-const SignUp: React.FC = () => {
+const MyProfile: React.FC = () => {
   const queryClient = useQueryClient();
   // const { data: movies } = useQuery(["getMovies"], () => getMovies());
   const navigate = useNavigate();
+  const userData = queryClient.getQueryData("user");
+  console.log(userData);
+
+  const { mutateAsync: editMutateAsync } = useMutation(
+    (user) => editUser(user),
+    {
+      onSuccess: async (data) => {
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshToken = localStorage.getItem("accessToken");
+
+        const userData = await getUserDetails();
+
+        queryClient.setQueryData("user", {
+          accessToken,
+          refreshToken,
+          ...userData,
+        });
+
+        // navigate("/");
+        toast.success("Edited user successfully");
+      },
+      onError: (error: any) => {
+        toast.error("Failed to edit user");
+      },
+    }
+  );
+
+  const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
+    onSuccess: (data) => {
+      queryClient.setQueryData("user", null);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      navigate("/");
+      // console.log(queryClient.setQueryData("user"));
+
+      toast.success("logout successfully");
+    },
+    onError: (error: any) => {
+      if (error.response.status === 401) {
+        queryClient.setQueryData("user", null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        navigate("/");
+
+        toast.success("logout successfully");
+      } else {
+        toast.error("Failed to logout");
+      }
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      username: "",
-      password: "",
-      image: null,
+      email: userData?.email || "",
+      username: userData?.username || "",
+      profileImage: userData?.profileImage || "",
     },
     validationSchema: Yup.object().shape({
       email: Yup.string().required("email is required"),
       username: Yup.string().required("username is required"),
-      password: Yup.string().required("password is required"),
-      image: Yup.mixed().required("image is required"),
+      // password: Yup.string().required("password is required"),
+      profileImage: Yup.mixed().required("image is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-
-      mutateAsync(values);
-    },
-  });
-
-  const { mutateAsync } = useMutation((user: any) => createUser(user), {
-    onSuccess: (data) => {
-      // queryClient.invalidateQueries("getPosts");
-      navigate("/");
-      toast.success("Created user successfully");
-    },
-    onError: (error: any) => {
-      toast.error("Failed to create user");
+      editMutateAsync(values);
     },
   });
 
   return (
     <Container sx={{ py: 8 }} maxWidth="xs">
-      <Typography variant="h5" align="center" color="text.secondary" paragraph>
-        Create an Account!
+      <Button
+        color="error"
+        variant="contained"
+        fullWidth
+        sx={{ mt: 2 }}
+        onClick={logoutMutateAsync}
+      >
+        Logout
+      </Button>
+      <Typography
+        variant="h5"
+        align="center"
+        color="text.secondary"
+        paragraph
+        marginTop="80px"
+      >
+        Edit Your Account
       </Typography>
       <form onSubmit={formik.handleSubmit}>
         <TextField
@@ -95,19 +146,6 @@ const SignUp: React.FC = () => {
           helperText={formik.touched.username && formik.errors.username}
         />
 
-        <TextField
-          sx={{ mt: 2 }}
-          fullWidth
-          id="password"
-          name="password"
-          label="password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
         <Box
           display="flex"
           justifyContent="center"
@@ -123,37 +161,45 @@ const SignUp: React.FC = () => {
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
             >
-              Upload avatar
+              {formik.values.profileImage.name ??
+                formik.values.profileImage ??
+                "Upload image"}
               <VisuallyHiddenInput
                 type="file"
-                id="image"
-                name="image"
-                label="image"
+                id="profileImage"
+                name="profileImage"
+                label="profileImage"
                 // onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 // accept="image/png, .svg"
                 onChange={(e) => {
                   // Object is possibly null error w/o check
                   if (e.currentTarget.files) {
-                    formik.setFieldValue("image", e.currentTarget.files[0]);
+                    console.log(e.currentTarget.files[0]);
+
+                    formik.setFieldValue(
+                      "profileImage",
+                      e.currentTarget.files[0]
+                    );
                   }
                 }}
                 // error={formik.touched.image && Boolean(formik.errors.image)}
-                helperText={formik.touched.image && formik.errors.image}
+                helperText={
+                  formik.touched.profileImage && formik.errors.profileImage
+                }
               />
             </Button>
           </Grid>
           <Grid item>
-            {formik.errors.image && (
+            {formik.errors.profileImage && (
               <>
                 <br />
-                <span id="error">{formik.errors.image}</span>
+                <span id="error">{formik.errors.profileImage}</span>
                 <br />
               </>
             )}
           </Grid>
         </Box>
-
         <Button
           color="primary"
           variant="contained"
@@ -161,11 +207,11 @@ const SignUp: React.FC = () => {
           type="submit"
           sx={{ mt: 2 }}
         >
-          SignUp
+          Save
         </Button>
       </form>
     </Container>
   );
 };
 
-export default SignUp;
+export default MyProfile;

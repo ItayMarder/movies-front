@@ -1,4 +1,4 @@
-import axios from "../axios";
+import axios from "axios";
 import { User } from "./users";
 
 export interface Movie {
@@ -8,7 +8,7 @@ export interface Movie {
 
 const getMovies = async (search: string) => {
   const { data } = await axios.get<{ description: Movie[] }>(
-    `/movies?q=${search || "a"}`
+    `https://search.imdbot.workers.dev?q=${search || "a"}`
   );
   return data.description;
 };

@@ -12,6 +12,21 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { getMovies } from "../../services/movies";
 import { useNavigate } from "react-router-dom";
 import { Post, createPost } from "../../services/posts";
+import { Box, Grid } from "@mui/material";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import styled from "styled-components";
+
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const NewPost: React.FC = () => {
   const queryClient = useQueryClient();
@@ -26,7 +41,8 @@ const NewPost: React.FC = () => {
 
   const { mutateAsync } = useMutation((post: any) => createPost(post), {
     onSuccess: (data) => {
-      queryClient.invalidateQueries("getPosts");
+      queryClient.invalidateQueries(["getPosts"]);
+      queryClient.invalidateQueries(["myPosts"]);
       navigate("/");
       toast.success("Created post successfully");
     },
@@ -37,12 +53,14 @@ const NewPost: React.FC = () => {
 
   const formik = useFormik({
     initialValues: {
-      review: "",
+      content: "",
       movie: null,
+      image: null,
     },
     validationSchema: Yup.object().shape({
-      review: Yup.string().trim().required("Review is required"),
+      content: Yup.string().trim().required("content is required"),
       movie: Yup.object().required("Movie is required"),
+      image: Yup.mixed().required("image is required"),
     }),
     onSubmit: (values) => {
       mutateAsync(values);
@@ -87,15 +105,60 @@ const NewPost: React.FC = () => {
           fullWidth
           multiline
           rows={4}
-          id="review"
-          name="review"
-          label="review"
-          value={formik.values.review}
+          id="content"
+          name="content"
+          label="content"
+          value={formik.values.content}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          error={formik.touched.review && Boolean(formik.errors.review)}
-          helperText={formik.touched.review && formik.errors.review}
+          error={formik.touched.content && Boolean(formik.errors.content)}
+          helperText={formik.touched.content && formik.errors.content}
         />
+        <Box
+          display="flex"
+          justifyContent="center"
+          marginTop="10px"
+          flexDirection="column"
+          alignItems="center"
+        >
+          <Grid item>
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload image
+              <VisuallyHiddenInput
+                type="file"
+                id="image"
+                name="image"
+                label="image"
+                // onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                // accept="image/png, .svg"
+                onChange={(e) => {
+                  // Object is possibly null error w/o check
+                  if (e.currentTarget.files) {
+                    formik.setFieldValue("image", e.currentTarget.files[0]);
+                  }
+                }}
+                // error={formik.touched.image && Boolean(formik.errors.image)}
+                helperText={formik.touched.image && formik.errors.image}
+              />
+            </Button>
+          </Grid>
+          <Grid item>
+            {formik.errors.image && (
+              <>
+                <br />
+                <span id="error">{formik.errors.image}</span>
+                <br />
+              </>
+            )}
+          </Grid>
+        </Box>
         <Button
           color="primary"
           variant="contained"

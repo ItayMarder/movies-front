@@ -4,9 +4,15 @@ import "./index.css";
 import App from "./App";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { AxiosError } from "axios";
-import { BrowserRouter as Router } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 if (import.meta.hot) {
   import.meta.hot.on("vite:beforeUpdate", () => console.clear());
@@ -16,6 +22,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      // refetchOnMount: false,
+      // refetchOnReconnect: false,
+      // staleTime: 1000 * 60 * 5,
       retry: (count, error) => {
         if ((error as AxiosError).response?.status === 403) {
           return false;
@@ -28,8 +37,9 @@ const queryClient = new QueryClient({
 });
 
 ReactDOM.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+  // <React.StrictMode>
+  <QueryClientProvider client={queryClient} contextSharing={true}>
+    <GoogleOAuthProvider clientId="723638499543-sdcn9312rg2fh0k90n2p626qvelodplb.apps.googleusercontent.com">
       <Router>
         <App />
         <ToastContainer
@@ -40,7 +50,9 @@ ReactDOM.render(
           newestOnTop
         />
       </Router>
-    </QueryClientProvider>
-  </React.StrictMode>,
+      <ReactQueryDevtools initialIsOpen={false} />
+    </GoogleOAuthProvider>
+  </QueryClientProvider>,
+  // </React.StrictMode>,
   document.getElementById("root")
 );

@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getMovies } from "../../services/movies";
 import { useNavigate, useParams } from "react-router-dom";
-import { Post, createPost, getPost } from "../../services/posts";
+import { Post, createComment, createPost, getPost } from "../../services/posts";
 
 const NewComment: React.FC = () => {
   const queryClient = useQueryClient();
@@ -21,16 +21,19 @@ const NewComment: React.FC = () => {
 
   const navigate = useNavigate();
 
-  const { mutateAsync } = useMutation((post: any) => createPost(post), {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries("getPosts");
-      navigate(`/post/${postId}`);
-      toast.success("Created comment successfully");
-    },
-    onError: (error: any) => {
-      toast.error("Failed to create comment");
-    },
-  });
+  const { mutateAsync } = useMutation(
+    (comment: any) => createComment(postId, comment.content),
+    {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["getPost", postId]);
+        navigate(`/post/${postId}`);
+        toast.success("Created comment successfully");
+      },
+      onError: (error: any) => {
+        toast.error("Failed to create comment");
+      },
+    }
+  );
 
   const formik = useFormik({
     initialValues: {

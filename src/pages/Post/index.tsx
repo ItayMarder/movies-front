@@ -12,9 +12,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import { getPost } from "../../services/posts";
 import { useNavigate, useParams } from "react-router-dom";
 import { Post, createPost } from "../../services/posts";
-import { Divider } from "@mui/material";
+import { Box, CircularProgress, Divider } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Fab from "@mui/material/Fab";
+import CommentInfo from "./CommentInfo";
 
 const PostPage: React.FC = () => {
   const queryClient = useQueryClient();
@@ -25,9 +26,16 @@ const PostPage: React.FC = () => {
 
   const navigate = useNavigate();
 
+  if (!post)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress color="success" size={100} />
+      </Box>
+    );
+
   const {
-    title,
-    owner: { email },
+    movieName,
+    user: { username },
     content,
     comments,
   } = post!;
@@ -35,41 +43,32 @@ const PostPage: React.FC = () => {
   return (
     <Container sx={{ py: 8 }} maxWidth="sm">
       <Typography variant="h3" align="center" color="text.primary" paragraph>
-        {title}
+        {movieName}
       </Typography>
       <Typography variant="h4" align="center" color="text.secondary" paragraph>
         {content}
       </Typography>
       <Typography variant="h5" align="center" color="text.secondary" paragraph>
-        {email}
+        {username}
       </Typography>
       <br />
       <br />
-      <Divider />
-      {comments.map((comment) => {
-        const { content, owner } = comment;
-        return (
-          <div>
-            <Typography
-              variant="h6"
-              align="center"
-              color="text.secondary"
-              paragraph
-            >
-              {content}
-            </Typography>
-            <Typography
-              variant="h6"
-              align="center"
-              color="text.secondary"
-              paragraph
-            >
-              {owner.email}
-            </Typography>
-            <Divider />
-          </div>
-        );
-      })}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "10px",
+        }}
+      >
+        {comments.map((comment) => {
+          const { content, user, _id, date } = comment;
+          return (
+            <CommentInfo content={content} user={user} _id={_id} date={date} />
+          );
+        })}
+      </Box>
       <Fab
         variant="extended"
         sx={{
@@ -77,10 +76,10 @@ const PostPage: React.FC = () => {
           bottom: 60,
           right: 60,
         }}
-        onClick={() => navigate(`/post/${postId!}/add-review`)}
+        onClick={() => navigate(`/post/${postId!}/add-comment`)}
       >
         <AddIcon sx={{ mr: 1 }} />
-        Add Review
+        Add Comment
       </Fab>
     </Container>
   );
