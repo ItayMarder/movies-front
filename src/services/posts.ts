@@ -39,7 +39,9 @@ const editPost = async (postId, post) => {
   const form = new FormData();
   // form.append("movieName", post.movieName);
   form.append("content", post.content);
-  form.append("imageName", post.imageName);
+  if (typeof post.imageName !== "string") {
+    form.append("image", post.imageName);
+  }
   const { data } = await axios.patch<User>("/posts/" + postId, form, {
     headers: { "Content-Type": "multipart/form-data" },
   });
