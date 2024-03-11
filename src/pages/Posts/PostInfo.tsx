@@ -13,8 +13,11 @@ import {
   CardMedia,
   Chip,
   Grid,
+  Tooltip,
 } from "@mui/material";
 import { baseURL } from "../../axios";
+import CommentIcon from "@mui/icons-material/Comment";
+import GradeIcon from "@mui/icons-material/Grade";
 
 const PostInfo: React.FC<Post> = ({
   movieName,
@@ -29,18 +32,22 @@ const PostInfo: React.FC<Post> = ({
 
   return (
     <Grid item xs={12} sm={6} md={4}>
-      <Card sx={{ maxWidth: 345, m: 2 }}>
+      <Card sx={{ maxWidth: 450, m: 2 }}>
         <CardHeader
           avatar={
             <Avatar
-              src={`${baseURL}/images/${user.profileImage}`}
+              src={
+                user.imageUrl
+                  ? `${user.imageUrl}`
+                  : `${baseURL}/images/${user.profileImage}`
+              }
               animation="wave"
               variant="circular"
               width={40}
               height={40}
             />
           }
-          title={<Typography>{movieName}</Typography>}
+          title={<Typography fontWeight="bold">{movieName}</Typography>}
           subheader={<Typography>{user.username}</Typography>}
           action={
             <>
@@ -48,8 +55,22 @@ const PostInfo: React.FC<Post> = ({
                 color="primary"
                 label={comments.length}
                 sx={{ marginRight: "5px" }}
+                icon={<CommentIcon />}
               />
-              <Chip color="success" label={imdbRating || "?"} />
+              <Tooltip
+                title={
+                  <Typography placement="top" arrow>
+                    IMDB Rating: {imdbRating || "?"}
+                  </Typography>
+                }
+                arrow
+              >
+                <Chip
+                  color="success"
+                  label={imdbRating || "?"}
+                  icon={<GradeIcon />}
+                />
+              </Tooltip>
             </>
           }
         />

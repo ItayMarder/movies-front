@@ -8,6 +8,7 @@ export interface Post {
   content: string;
   imageName: string;
   comments: Comment[];
+  imdbRating: number;
 }
 
 export interface Comment {
@@ -17,8 +18,8 @@ export interface Comment {
   date: Date;
 }
 
-const getPosts = async (page = 1) => {
-  const { data } = await axios.get<Post[]>("/posts?limit=10&page=" + page);
+const getPosts = async () => {
+  const { data } = await axios.get<Post[]>("/posts");
 
   return data;
 };

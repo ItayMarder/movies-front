@@ -13,6 +13,7 @@ import { editUser, getUserDetails, logoutUser } from "../../services/users";
 import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
+import { baseURL } from "../../axios";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -86,12 +87,14 @@ const MyProfile: React.FC = () => {
     validationSchema: Yup.object().shape({
       email: Yup.string().required("email is required"),
       username: Yup.string().required("username is required"),
-      profileImage: Yup.mixed().required("image is required"),
+      profileImage: Yup.mixed(),
     }),
     onSubmit: (values) => {
       editMutateAsync(values);
     },
   });
+
+  console.log(formik?.values.profileImage);
 
   return (
     <Container sx={{ py: 8 }} maxWidth="xs">
@@ -109,10 +112,30 @@ const MyProfile: React.FC = () => {
         align="center"
         color="text.secondary"
         paragraph
-        marginTop="80px"
+        marginTop="50px"
       >
         Edit Your Account
       </Typography>
+      <Box
+        component="img"
+        sx={{
+          border: "1px solid black",
+          overflow: "hidden",
+          m: "0 auto",
+          width: 200,
+          height: 200,
+          borderRadius: "50%",
+          mb: 2,
+          boxShadow: "10px 10px 8px #888888",
+        }}
+        src={
+          formik?.values.profileImage
+            ? URL.createObjectURL(formik?.values.profileImage)
+            : userData?.imageUrl ||
+              `${baseURL}/images/${userData?.imageName}` ||
+              "/public/default-avatar.jpg"
+        }
+      />
       <form onSubmit={formik.handleSubmit}>
         <TextField
           fullWidth

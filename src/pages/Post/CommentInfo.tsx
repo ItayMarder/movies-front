@@ -14,7 +14,12 @@ const CommentInfo: React.FC<Comment> = ({ content, user, date }) => {
       <CardContent>
         <Box display="flex" gap="20px">
           <Avatar
-            src={`${baseURL}/images/${user.profileImage}`}
+            src={
+              user.imageUrl
+                ? user.imageUrl
+                : `${baseURL}/images/${user.profileImage}` ||
+                  "public/default-avatar.jpg"
+            }
             animation="wave"
             variant="circular"
             width={40}
@@ -30,7 +35,7 @@ const CommentInfo: React.FC<Comment> = ({ content, user, date }) => {
           </Box>
         </Box>
       </CardContent>
-      <CardContent sx={{ gap: 0.5, mt: 1 }}>
+      <CardContent>
         <Typography variant="body1" color="text.primary">
           {content}
         </Typography>

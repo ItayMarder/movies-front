@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
 import { useFormik } from "formik";
+import { baseURL } from "../../axios";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -29,6 +30,8 @@ const PostEdit: React.FC = ({}) => {
   const queryClient = useQueryClient();
   const { postId } = useParams();
   const { data: post } = useQuery(["getPost", postId], () => getPost(postId!));
+
+  console.log(post);
 
   const { mutateAsync } = useMutation(
     (postData) => editPost(postId, postData),
@@ -63,7 +66,7 @@ const PostEdit: React.FC = ({}) => {
   });
 
   return (
-    <Container sx={{ py: 8 }} maxWidth="xs">
+    <Container sx={{ py: 2 }} maxWidth="xs">
       <Typography
         variant="h5"
         align="center"
@@ -73,6 +76,22 @@ const PostEdit: React.FC = ({}) => {
       >
         Edit Your Review
       </Typography>
+      <Box
+        sx={{
+          border: "1px solid black",
+          borderRadius: "10px",
+          overflow: "hidden",
+          boxShadow: "10px 10px 8px #888888",
+        }}
+        component="img"
+        src={
+          formik.values.imageName
+            ? URL.createObjectURL(formik.values.imageName)
+            : post?.imageName
+            ? `${baseURL}/images/${post.imageName}`
+            : ""
+        }
+      />
       <form onSubmit={formik.handleSubmit}>
         <TextField
           sx={{ mt: 2 }}

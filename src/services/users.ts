@@ -3,7 +3,8 @@ export interface User {
   email: string;
   password: string;
   username: string;
-  profileImage: string;
+  profileImage?: string;
+  imageUrl?: string;
 }
 import axios from "../axios";
 
@@ -51,8 +52,6 @@ const logoutUser = async () => {
 };
 
 const editUser = async (userData) => {
-
-
   const form = new FormData();
   form.append("email", userData.email);
   form.append("username", userData.username);

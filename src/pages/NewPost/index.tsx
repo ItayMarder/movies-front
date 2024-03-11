@@ -71,8 +71,25 @@ const NewPost: React.FC = () => {
       <Typography variant="h5" align="center" color="text.secondary" paragraph>
         Search a movie and add your review!
       </Typography>
+
+      {formik.values?.image && (
+        <Box
+          component="img"
+          sx={{
+            border: "1px solid black",
+            borderRadius: "10px",
+            overflow: "hidden",
+            boxShadow: "10px 10px 8px #888888",
+            m: "0 auto",
+            width: 300,
+            height: 300,
+          }}
+          src={URL.createObjectURL(formik.values.image)}
+        />
+      )}
       <form onSubmit={formik.handleSubmit}>
         <Autocomplete
+          sx={{ mt: 2 }}
           fullWidth
           options={movies || []}
           value={formik.values.movie}
@@ -128,7 +145,9 @@ const NewPost: React.FC = () => {
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
             >
-              Upload image
+              {formik.values.image?.name ??
+                formik.values.image ??
+                "Upload image"}
               <VisuallyHiddenInput
                 type="file"
                 id="image"

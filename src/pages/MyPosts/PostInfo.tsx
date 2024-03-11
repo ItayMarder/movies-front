@@ -48,7 +48,12 @@ const PostInfo: React.FC<Post> = ({
         <CardHeader
           avatar={
             <Avatar
-              src={`${baseURL}/images/${user.profileImage}`}
+              src={
+                user.imageUrl
+                  ? user.imageUrl
+                  : `${baseURL}/images/${user.profileImage}` ||
+                    "public/default-avatar.jpg"
+              }
               animation="wave"
               variant="circular"
               width={40}

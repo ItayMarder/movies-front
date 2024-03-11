@@ -73,7 +73,7 @@ const Posts: React.FC = () => {
           )}
         </Container>
       </Box>
-      <Container sx={{ py: 8 }} maxWidth="lg">
+      <Container sx={{ py: 8 }} maxWidth="xl">
         <Grid container spacing={4}>
           {posts
             ? posts?.map((card) => <PostInfo key={card._id} {...card} />)
@@ -85,9 +85,9 @@ const Posts: React.FC = () => {
       <Fab
         variant="extended"
         sx={{
-          position: "absolute",
-          bottom: 60,
-          right: 60,
+          position: "fixed",
+          bottom: 50,
+          right: 50,
         }}
         onClick={() => navigate("/new-post")}
       >

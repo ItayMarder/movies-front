@@ -54,9 +54,9 @@ const MyPosts: React.FC = () => {
       <Fab
         variant="extended"
         sx={{
-          position: "absolute",
-          bottom: 60,
-          right: 60,
+          position: "fixed",
+          right: 50,
+          bottom: 50,
         }}
         onClick={() => navigate("/new-post")}
       >
