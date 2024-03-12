@@ -10,10 +10,17 @@ const axios = axiosInstance.create({
 });
 
 axios.interceptors.request.use((config) => {
-  const accessToken = localStorage.getItem("accessToken");
+  if (config.url?.includes("/logout") || config.url?.includes("/refresh")) {
+    const refreshToken = localStorage.getItem("refreshToken");
+    if (refreshToken) {
+      config.headers.Authorization = `Bearer ${refreshToken}`;
+    }
+  } else {
+    const accessToken = localStorage.getItem("accessToken");
 
-  if (accessToken) {
-    config.headers.Authorization = `Bearer ${accessToken}`;
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
   }
 
   return config;

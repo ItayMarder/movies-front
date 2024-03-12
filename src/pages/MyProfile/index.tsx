@@ -9,7 +9,12 @@ import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { editUser, getUserDetails, logoutUser } from "../../services/users";
+import {
+  User,
+  editUser,
+  getUserDetails,
+  logoutUser,
+} from "../../services/users";
 import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
@@ -30,7 +35,7 @@ const VisuallyHiddenInput = styled("input")({
 const MyProfile: React.FC = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const userData = queryClient.getQueryData("user");
+  const userData = queryClient.getQueryData<User>("user");
 
   const { mutateAsync: editMutateAsync } = useMutation(
     (user) => editUser(user),
@@ -55,28 +60,28 @@ const MyProfile: React.FC = () => {
     }
   );
 
-  const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
-    onSuccess: () => {
-      queryClient.setQueryData("user", null);
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      navigate("/");
+  // const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
+  //   onSuccess: () => {
+  //     queryClient.setQueryData("user", null);
+  //     localStorage.removeItem("accessToken");
+  //     localStorage.removeItem("refreshToken");
+  //     navigate("/");
 
-      toast.success("logout successfully");
-    },
-    onError: (error: any) => {
-      if (error.response.status === 401) {
-        queryClient.setQueryData("user", null);
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        navigate("/");
+  //     toast.success("logout successfully");
+  //   },
+  //   onError: (error: any) => {
+  //     if (error.response.status === 401) {
+  //       queryClient.setQueryData("user", null);
+  //       localStorage.removeItem("accessToken");
+  //       localStorage.removeItem("refreshToken");
+  //       navigate("/");
 
-        toast.success("logout successfully");
-      } else {
-        toast.error("Failed to logout");
-      }
-    },
-  });
+  //       toast.success("logout successfully");
+  //     } else {
+  //       toast.error("Failed to logout");
+  //     }
+  //   },
+  // });
 
   const formik = useFormik({
     initialValues: {
@@ -98,7 +103,7 @@ const MyProfile: React.FC = () => {
 
   return (
     <Container sx={{ py: 8 }} maxWidth="xs">
-      <Button
+      {/* <Button
         color="error"
         variant="contained"
         fullWidth
@@ -106,7 +111,7 @@ const MyProfile: React.FC = () => {
         onClick={logoutMutateAsync}
       >
         Logout
-      </Button>
+      </Button> */}
       <Typography
         variant="h5"
         align="center"

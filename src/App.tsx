@@ -1,9 +1,10 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import { ThemeProvider } from "@mui/material/styles";
-import { createTheme } from "@mui/material";
+import { Button, createTheme } from "@mui/material";
+import { toast } from "react-toastify";
 import Posts from "./pages/Posts";
 import NewPost from "./pages/NewPost";
 import Login from "./pages/Login";
@@ -12,15 +13,47 @@ import Post from "./pages/Post";
 import NewComment from "./pages/NewComment";
 import MyProfile from "./pages/MyProfile";
 import MyPosts from "./pages/MyPosts";
-import { useQueryClient } from "react-query";
+import { QueryObserver, useMutation, useQueryClient } from "react-query";
 import { useEffect, useState } from "react";
 import TopBar from "./TopBar";
-import { getUserDetails } from "./services/users";
+import { User, getUserDetails, logoutUser } from "./services/users";
 import PostEdit from "./pages/Posts/PostEdit";
 
 const App = () => {
   const defaultTheme = createTheme();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const [user, setUser] = useState<User | null>(null);
+
+  const observer = new QueryObserver(queryClient, { queryKey: ["user"] });
+
+  observer.subscribe((result) => {
+    setUser(result.data as User);
+  });
+
+  const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
+    onSuccess: () => {
+      queryClient.setQueryData("user", null);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      navigate("/");
+
+      toast.success("logout successfully");
+    },
+    onError: (error: any) => {
+      if (error.response.status === 401) {
+        queryClient.setQueryData("user", null);
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        navigate("/");
+
+        toast.success("logout successfully");
+      } else {
+        toast.error("Failed to logout");
+      }
+    },
+  });
 
   useEffect(() => {
     const setUserData = async () => {
@@ -35,6 +68,8 @@ const App = () => {
           refreshToken,
           ...userData,
         });
+
+        setUser(userData);
       }
     };
 
@@ -50,6 +85,16 @@ const App = () => {
             <TopBar />
           </Toolbar>
         </AppBar>
+        {user && (
+          <Button
+            color="error"
+            variant="contained"
+            sx={{ position: "fixed", bottom: 50, left: 50 }}
+            onClick={logoutMutateAsync}
+          >
+            Log Out
+          </Button>
+        )}
       </>
 
       <Routes>
