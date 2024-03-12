@@ -1,5 +1,5 @@
 import React from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { QueryObserver, useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import Button from "@mui/material/Button";
@@ -9,12 +9,7 @@ import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import {
-  User,
-  editUser,
-  getUserDetails,
-  logoutUser,
-} from "../../services/users";
+import { User, editUser, getUserDetails } from "../../services/users";
 import { Box, Grid } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import styled from "styled-components";
@@ -37,8 +32,10 @@ const MyProfile: React.FC = () => {
   const navigate = useNavigate();
   const userData = queryClient.getQueryData<User>("user");
 
+  console.log(userData);
+
   const { mutateAsync: editMutateAsync } = useMutation(
-    (user) => editUser(user),
+    (user: Partial<User>) => editUser(user),
     {
       onSuccess: async () => {
         const accessToken = localStorage.getItem("accessToken");
@@ -60,29 +57,6 @@ const MyProfile: React.FC = () => {
     }
   );
 
-  // const { mutateAsync: logoutMutateAsync } = useMutation(() => logoutUser(), {
-  //   onSuccess: () => {
-  //     queryClient.setQueryData("user", null);
-  //     localStorage.removeItem("accessToken");
-  //     localStorage.removeItem("refreshToken");
-  //     navigate("/");
-
-  //     toast.success("logout successfully");
-  //   },
-  //   onError: (error: any) => {
-  //     if (error.response.status === 401) {
-  //       queryClient.setQueryData("user", null);
-  //       localStorage.removeItem("accessToken");
-  //       localStorage.removeItem("refreshToken");
-  //       navigate("/");
-
-  //       toast.success("logout successfully");
-  //     } else {
-  //       toast.error("Failed to logout");
-  //     }
-  //   },
-  // });
-
   const formik = useFormik({
     initialValues: {
       email: userData?.email || "",
@@ -90,28 +64,23 @@ const MyProfile: React.FC = () => {
       profileImage: userData?.profileImage || "",
     },
     validationSchema: Yup.object().shape({
-      email: Yup.string().required("email is required"),
-      username: Yup.string().required("username is required"),
+      email: Yup.string(),
+      username: Yup.string(),
       profileImage: Yup.mixed(),
     }),
     onSubmit: (values) => {
-      editMutateAsync(values);
+      const updatedFields = {};
+      Object.keys(values).forEach((key) => {
+        if (values[key] !== formik.initialValues[key]) {
+          updatedFields[key] = values[key];
+        }
+      });
+      editMutateAsync(updatedFields as Partial<User>);
     },
   });
 
-  console.log(formik?.values.profileImage);
-
   return (
     <Container sx={{ py: 8 }} maxWidth="xs">
-      {/* <Button
-        color="error"
-        variant="contained"
-        fullWidth
-        sx={{ mt: 2 }}
-        onClick={logoutMutateAsync}
-      >
-        Logout
-      </Button> */}
       <Typography
         variant="h5"
         align="center"

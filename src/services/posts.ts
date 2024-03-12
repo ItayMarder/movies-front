@@ -39,8 +39,8 @@ const getPost = async (postId: string) => {
 const editPost = async (postId, post) => {
   const form = new FormData();
   // form.append("movieName", post.movieName);
-  form.append("content", post.content);
-  if (typeof post.imageName !== "string") {
+  if (post.content) form.append("content", post.content);
+  if (post.imageName && typeof post.imageName !== "string") {
     form.append("image", post.imageName);
   }
   const { data } = await axios.patch<User>("/posts/" + postId, form, {

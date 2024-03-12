@@ -51,11 +51,11 @@ const logoutUser = async () => {
   return data;
 };
 
-const editUser = async (userData) => {
+const editUser = async (userData: Partial<User>) => {
   const form = new FormData();
-  form.append("email", userData.email);
-  form.append("username", userData.username);
-  form.append("image", userData.profileImage);
+  if (userData.email) form.append("email", userData.email);
+  if (userData.username) form.append("username", userData.username);
+  if (userData.profileImage) form.append("image", userData.profileImage);
   const { data } = await axios.patch<User>("/users", form, {
     headers: { "Content-Type": "multipart/form-data" },
   });

@@ -31,8 +31,6 @@ const PostEdit: React.FC = ({}) => {
   const { postId } = useParams();
   const { data: post } = useQuery(["getPost", postId], () => getPost(postId!));
 
-  console.log(post);
-
   const { mutateAsync } = useMutation(
     (postData) => editPost(postId, postData),
     {
@@ -57,11 +55,17 @@ const PostEdit: React.FC = ({}) => {
       imageName: post?.imageName || "",
     },
     validationSchema: Yup.object().shape({
-      content: Yup.string().required("content is required"),
-      imageName: Yup.mixed().required("imageName is required"),
+      content: Yup.string(),
+      imageName: Yup.mixed(),
     }),
     onSubmit: (values) => {
-      mutateAsync(values);
+      const updatedFields = {};
+      Object.keys(values).forEach((key) => {
+        if (values[key] !== formik.initialValues[key]) {
+          updatedFields[key] = values[key];
+        }
+      });
+      mutateAsync(updatedFields as Partial<Post>);
     },
   });
 
@@ -76,6 +80,9 @@ const PostEdit: React.FC = ({}) => {
       >
         Edit Your Review
       </Typography>
+      <Typography variant="h5" align="center" fontWeight="bold" paragraph>
+        {post?.movieName}
+      </Typography>
       <Box
         sx={{
           border: "1px solid black",
@@ -85,7 +92,7 @@ const PostEdit: React.FC = ({}) => {
         }}
         component="img"
         src={
-          formik.values.imageName
+          formik.values.imageName && typeof formik.values.imageName !== "string"
             ? URL.createObjectURL(formik.values.imageName)
             : post?.imageName
             ? `${baseURL}/images/${post.imageName}`
