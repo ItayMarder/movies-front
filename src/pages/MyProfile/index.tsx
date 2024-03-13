@@ -77,6 +77,7 @@ const MyProfile: React.FC = () => {
       });
       editMutateAsync(updatedFields as Partial<User>);
     },
+    enableReinitialize: true,
   });
 
   return (

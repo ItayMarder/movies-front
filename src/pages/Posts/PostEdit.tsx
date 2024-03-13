@@ -67,6 +67,7 @@ const PostEdit: React.FC = ({}) => {
       });
       mutateAsync(updatedFields as Partial<Post>);
     },
+    enableReinitialize: true,
   });
 
   return (
