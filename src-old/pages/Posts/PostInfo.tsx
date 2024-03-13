@@ -41,13 +41,10 @@ const PostInfo: React.FC<Post> = ({
                   ? `${user.imageUrl}`
                   : `${baseURL}/images/${user.profileImage}`
               }
-              sx={{
-                width: 40,
-                height: 40
-              }}
-              // animation="wave"
+              animation="wave"
               variant="circular"
-              
+              width={40}
+              height={40}
             />
           }
           title={<Typography fontWeight="bold">{movieName}</Typography>}
@@ -62,11 +59,10 @@ const PostInfo: React.FC<Post> = ({
               />
               <Tooltip
                 title={
-                  <Typography>
+                  <Typography placement="top" arrow>
                     IMDB Rating: {imdbRating || "?"}
                   </Typography>
                 }
-                placement="top"
                 arrow
               >
                 <Chip

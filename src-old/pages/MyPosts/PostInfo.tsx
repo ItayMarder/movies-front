@@ -54,14 +54,10 @@ const PostInfo: React.FC<Post> = ({
                   : `${baseURL}/images/${user.profileImage}` ||
                     "public/default-avatar.jpg"
               }
-              sx={{
-                width: 40, 
-                height: 40
-              }}
-              // animation="wave"
+              animation="wave"
               variant="circular"
-              // width={40}
-              // height={40}
+              width={40}
+              height={40}
             />
           }
           title={<Typography>{movieName}</Typography>}

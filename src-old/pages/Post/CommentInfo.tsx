@@ -20,14 +20,10 @@ const CommentInfo: React.FC<Comment> = ({ content, user, date }) => {
                 : `${baseURL}/images/${user.profileImage}` ||
                   "public/default-avatar.jpg"
             }
-            sx={{
-              width: 40,
-              height: 40
-            }}
-            // animation="wave"
+            animation="wave"
             variant="circular"
-            // width={40}
-            // height={40}
+            width={40}
+            height={40}
           />
           <Box>
             <Typography variant="body1" color="text.secondary">

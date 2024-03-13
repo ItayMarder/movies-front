@@ -24,7 +24,7 @@ const Login: React.FC = () => {
   const { mutateAsync } = useMutation(
     (user: { email: string; password: string }) => loginUser(user),
     {
-      onSuccess: async (data: any) => {
+      onSuccess: async (data) => {
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         const userData = await getUserDetails();
@@ -42,7 +42,7 @@ const Login: React.FC = () => {
   const { mutateAsync: googleLoginMutateAsync } = useMutation(
     (user: any) => googleLoginUser(user),
     {
-      onSuccess: async (data: any) => {
+      onSuccess: async (data) => {
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
         const userData = await getUserDetails();

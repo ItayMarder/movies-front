@@ -121,7 +121,7 @@ const SignUp: React.FC = () => {
                 type="file"
                 id="image"
                 name="image"
-                // label="image"
+                label="image"
                 onBlur={formik.handleBlur}
                 accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
@@ -129,7 +129,7 @@ const SignUp: React.FC = () => {
                     formik.setFieldValue("image", e.currentTarget.files[0]);
                   }
                 }}
-                // helperText={formik.touched.image && formik.errors.image}
+                helperText={formik.touched.image && formik.errors.image}
               />
             </Button>
           </Grid>

@@ -152,7 +152,7 @@ const NewPost: React.FC = () => {
                 type="file"
                 id="image"
                 name="image"
-                // label="image"
+                label="image"
                 onBlur={formik.handleBlur}
                 accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {

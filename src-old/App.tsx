@@ -90,7 +90,7 @@ const App = () => {
             color="error"
             variant="contained"
             sx={{ position: "fixed", bottom: 50, left: 50 }}
-            onClick={()=>logoutMutateAsync()}
+            onClick={logoutMutateAsync}
           >
             Log Out
           </Button>

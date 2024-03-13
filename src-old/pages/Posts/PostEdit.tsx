@@ -32,7 +32,7 @@ const PostEdit: React.FC = ({}) => {
   const { data: post } = useQuery(["getPost", postId], () => getPost(postId!));
 
   const { mutateAsync } = useMutation(
-    (postData: Partial<Post>) => editPost(postId, postData),
+    (postData) => editPost(postId, postData),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("getPosts");
@@ -129,13 +129,14 @@ const PostEdit: React.FC = ({}) => {
               tabIndex={-1}
               startIcon={<CloudUploadIcon />}
             >
-              {typeof formik.values.imageName !== 'string' ? (formik.values.imageName as any).name : formik.values.imageName ??
+              {formik.values.imageName.name ??
+                formik.values.imageName ??
                 "Upload image"}
               <VisuallyHiddenInput
                 type="file"
                 id="imageName"
                 name="imageName"
-                // label="imageName"
+                label="imageName"
                 onBlur={formik.handleBlur}
                 accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
@@ -143,7 +144,7 @@ const PostEdit: React.FC = ({}) => {
                     formik.setFieldValue("imageName", e.currentTarget.files[0]);
                   }
                 }}
-                // helperText={formik.touched.imageName && formik.errors.imageName}
+                helperText={formik.touched.imageName && formik.errors.imageName}
               />
             </Button>
           </Grid>

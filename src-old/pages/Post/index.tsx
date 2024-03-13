@@ -46,7 +46,7 @@ const PostPage: React.FC = () => {
               ? `${user.imageUrl}`
               : `${baseURL}/images/${user.profileImage}`
           }
-          // animation="wave"
+          animation="wave"
           variant="circular"
           sx={{ width: 50, height: 50 }}
         />
@@ -60,11 +60,10 @@ const PostPage: React.FC = () => {
         </Typography>
         <Tooltip
           title={
-            <Typography>
+            <Typography placement="top" arrow>
               IMDB Rating
             </Typography>
           }
-          placement="top"
           arrow
         >
           <Chip

@@ -32,8 +32,6 @@ const MyProfile: React.FC = () => {
   const navigate = useNavigate();
   const userData = queryClient.getQueryData<User>("user");
 
-  console.log(userData);
-
   const { mutateAsync: editMutateAsync } = useMutation(
     (user: Partial<User>) => editUser(user),
     {
@@ -68,9 +66,9 @@ const MyProfile: React.FC = () => {
       username: Yup.string(),
       profileImage: Yup.mixed(),
     }),
-    onSubmit: (values) => {
-      const updatedFields = {};
-      Object.keys(values).forEach((key) => {
+    onSubmit: (values: any) => {
+      const updatedFields: any = {};
+      Object.keys(values).forEach((key: string) => {
         if (values[key] !== formik.initialValues[key]) {
           updatedFields[key] = values[key];
         }
@@ -104,10 +102,10 @@ const MyProfile: React.FC = () => {
           boxShadow: "10px 10px 8px #888888",
         }}
         src={
-          formik?.values.profileImage
+          formik?.values.profileImage && typeof formik?.values.profileImage !== 'string'
             ? URL.createObjectURL(formik?.values.profileImage)
             : userData?.imageUrl ||
-              `${baseURL}/images/${userData?.imageName}` ||
+              `${baseURL}/images/${userData?.profileImage}` ||
               "/public/default-avatar.jpg"
         }
       />
@@ -159,7 +157,7 @@ const MyProfile: React.FC = () => {
                 type="file"
                 id="profileImage"
                 name="profileImage"
-                label="profileImage"
+                // label="profileImage"
                 onBlur={formik.handleBlur}
                 accept="image/png, image/gif, image/jpeg"
                 onChange={(e) => {
@@ -170,9 +168,9 @@ const MyProfile: React.FC = () => {
                     );
                   }
                 }}
-                helperText={
-                  formik.touched.profileImage && formik.errors.profileImage
-                }
+                // helperText={
+                //   formik.touched.profileImage && formik.errors.profileImage
+                // }
               />
             </Button>
           </Grid>
